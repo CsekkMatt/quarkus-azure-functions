@@ -37,8 +37,7 @@ jobs:
 
     - name: 'List target directory'
       run: ls -l ./target
-           ls -l
-
+      
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
       id: fa
