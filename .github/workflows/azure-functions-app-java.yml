@@ -59,6 +59,9 @@ jobs:
         zip -r functionapp.zip .
         popd
 
+    - name: 'List target directory'
+      run: ls -l ./target
+
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
       id: fa
