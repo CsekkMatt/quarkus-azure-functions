@@ -52,12 +52,18 @@ jobs:
         pushd './${{ env.POM_XML_DIRECTORY }}'
         mvn clean package
         popd
+    
+    - name: 'Create Zip File'
+      run: |
+        pushd './${{ env.POM_XML_DIRECTORY }}/target'
+        zip -r functionapp.zip quarkus-azure-functionn-1.0.0-SNAPSHOT.jar
+        popd
 
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
       id: fa
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: '${{ env.POM_XML_DIRECTORY }}/target/quarkus-azure-functionn-1.0.0-SNAPSHOT.jar'
+        package: '${{ env.POM_XML_DIRECTORY }}/target/functionapp.zip'
         publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }} # Remove publish-profile to use Azure RBAC
         respect-pom-xml: true
