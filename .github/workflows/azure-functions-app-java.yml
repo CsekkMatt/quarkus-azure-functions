@@ -56,7 +56,7 @@ jobs:
     - name: 'Create Zip File'
       run: |
         pushd './${{ env.POM_XML_DIRECTORY }}/target'
-        zip -r functionapp.zip quarkus-azure-functionn-1.0.0-SNAPSHOT.jar
+        zip -r functionapp.zip .
         popd
 
     - name: 'Run Azure Functions Action'
