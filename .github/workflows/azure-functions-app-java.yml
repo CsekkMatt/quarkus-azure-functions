@@ -1,9 +1,7 @@
 name: Deploy Quarkus Project to Azure Function App
 
 on:
-  push:
-    branches:
-      - main
+  [push]
 
 env:
   AZURE_FUNCTIONAPP_NAME: 'quarkus-azure-functionn-1703850888742'
@@ -24,10 +22,12 @@ jobs:
       with:
         graalvm-version: ${{ env.GRAALVM_VERSION }}
         java: 'java${{ env.JAVA_VERSION }}'
-
+    
+    - name: Add GraalVM to path
+      run: echo "$HOME/.graalvm/bin" >> $GITHUB_PATH
+    
     - name: Install native-image
       run: gu install native-image
-
     - name: 'Build Native Executable Using Mvn'
       shell: bash
       run: |
