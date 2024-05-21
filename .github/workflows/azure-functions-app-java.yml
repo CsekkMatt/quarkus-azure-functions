@@ -1,7 +1,7 @@
 name: Deploy Quarkus Project to Azure Function App
 
 on:
-  [push]
+  push:
 
 env:
   AZURE_FUNCTIONAPP_NAME: 'quarkus-azure-functionn-1703850888742'
@@ -17,23 +17,27 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v3
 
-    - name: Setup GraalVM
-      uses: DeLaGuardo/setup-graalvm@3
-      with:
-        graalvm-version: '${{ env.GRAALVM_VERSION }}-java${{ env.JAVA_VERSION }}'
-        java: 'java${{ env.JAVA_VERSION }}'
-        native-image: 'true'
+    - name: 'Set up GraalVM'
+      run: |
+        GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ env.GRAALVM_VERSION }}/graalvm-ce-java${{ env.JAVA_VERSION }}-linux-amd64-${{ env.GRAALVM_VERSION }}.tar.gz
+        wget -q $GRAALVM_URL -O graalvm.tar.gz
+        tar -xzf graalvm.tar.gz
+        export GRAALVM_HOME=$(pwd)/graalvm-ce-java${{ env.JAVA_VERSION }}-${{ env.GRAALVM_VERSION }}
+        export PATH=$GRAALVM_HOME/bin:$PATH
+        gu install native-image
 
     - name: 'Build Native Executable Using Mvn'
       shell: bash
       run: |
+        export GRAALVM_HOME=$(pwd)/graalvm-ce-java${{ env.JAVA_VERSION }}-${{ env.GRAALVM_VERSION }}
+        export PATH=$GRAALVM_HOME/bin:$PATH
         pushd './${{ env.POM_XML_DIRECTORY }}'
         mvn clean package -Pnative
         popd
 
     - name: 'List target directory'
       run: ls -l ./target
-      
+
     - name: 'Run Azure Functions Action'
       uses: azure/functions-action@v1
       id: fa
@@ -42,5 +46,3 @@ jobs:
         package: './target/azure-functions/quarkus-azure-functionn-1703850888742'
         publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
         respect-pom-xml: true
-
-# For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
