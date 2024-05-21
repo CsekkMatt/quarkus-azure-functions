@@ -43,7 +43,7 @@ jobs:
       id: fa
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: './target/azure-functions/*'
+        package: './target/azure-functions/quarkus-azure-functionn-1703850888742'
         publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
         respect-pom-xml: true
 
