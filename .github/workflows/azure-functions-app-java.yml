@@ -18,16 +18,12 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Setup GraalVM
-      uses: DeLaGuardo/setup-graalvm@4.0
+      uses: DeLaGuardo/setup-graalvm@3
       with:
         graalvm-version: ${{ env.GRAALVM_VERSION }}
         java: 'java${{ env.JAVA_VERSION }}'
-    
-    - name: Add GraalVM to path
-      run: echo "$HOME/.graalvm/bin" >> $GITHUB_PATH
-    
-    - name: Install native-image
-      run: gu install native-image
+        native-image: 'true'
+
     - name: 'Build Native Executable Using Mvn'
       shell: bash
       run: |
