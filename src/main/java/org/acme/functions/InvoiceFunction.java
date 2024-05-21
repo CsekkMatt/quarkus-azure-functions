@@ -48,6 +48,25 @@ public class InvoiceFunction {
         return request.createResponseBuilder(HttpStatus.OK).body("Month is valid").build();
     }
 
+    @FunctionName("CacheInvoicesUntilDate")
+    public HttpResponseMessage cacheInvoicesUntilDate(
+            @HttpTrigger(name = "req", methods = {
+                    HttpMethod.POST }, route = "cache", authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
+            final ExecutionContext context) {
+        context.getLogger().info("Cache invoices until date");
+
+        String month = request.getQueryParameters().get("month");
+        Instant now = Instant.now();
+        if (!isValidMonth(month)) {
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Invalid date format. Please use yyyy-MM")
+                    .build();
+        }
+        invoiceService.cacheInvoicesUntilDate(month);
+        context.getLogger()
+                .info(String.format("Request processed in %d ms", Instant.now().toEpochMilli() - now.toEpochMilli()));
+        return request.createResponseBuilder(HttpStatus.OK).body("Invoices cached until " + month).build();
+    }
+
     private boolean isValidMonth(String month) {
         if (month == null || month.isEmpty()) {
             return false;
