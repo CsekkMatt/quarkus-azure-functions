@@ -20,7 +20,7 @@ jobs:
     - name: Setup GraalVM
       uses: DeLaGuardo/setup-graalvm@3
       with:
-        graalvm-version: 'java${{ env.JAVA_VERSION }}-${{ env.GRAALVM_VERSION }}'
+        graalvm-version: '${{ env.GRAALVM_VERSION }}-java${{ env.JAVA_VERSION }}'
         java: 'java${{ env.JAVA_VERSION }}'
         native-image: 'true'
 
